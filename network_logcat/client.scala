@@ -10,13 +10,11 @@ import java.io.{ BufferedReader, InputStreamReader }
  * @author rv
  *
  */
-
 object Client {
-  val tail_file_path = "/Users/rv/Desktop/log.txt"
-  val cmd = "tail -f " + tail_file_path
-  
-  def start {
-    val socket = new Socket(InetAddress.getByName("localhost"), 9999)
+  def start(adblogfile : String, address : String, port : Int) {
+  	println("address is " + address + ", port is " + port + ", adblogfle is " + adblogfile)
+  	val cmd = "tail -f " + adblogfile
+    val socket = new Socket(InetAddress.getByName(address), port)
     val pio = new ProcessIO(
       in => {},
       out => {
@@ -24,7 +22,6 @@ object Client {
         val writer = new PrintWriter(socket.getOutputStream(), true)
         def readLine(): Unit = {
           val line = reader.readLine()
-          println("a")
           println(line) // ここに1行ずつで結果が来るから適当に処理する
           writer.println(line)
           if (line != null) readLine()
@@ -39,4 +36,4 @@ object Client {
   }
 }
 
-Client.start
+Client.start(args(0),args(1),args(2).toInt)
